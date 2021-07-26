@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#define ARRAY_SIZE(x) ((sizeof x) / (sizeof *x))
+
 typedef enum OPCODE {
     NOP,
     MOV
@@ -17,8 +19,7 @@ const char* const op2str[] = {
 int main() {
     CREATE_LUT(str2op, 32);
 
-    lut_insert(str2op.table, str2op.size, "nop", NOP);
-    lut_insert(str2op.table, str2op.size, "mov", MOV);
+    lut_fill(str2op.table, str2op.size, op2str, ARRAY_SIZE(op2str));
 
     printf("nop: %s\n", op2str[lut_get(str2op.table, str2op.size, "nop")]);
     printf("mov: %s\n", op2str[lut_get(str2op.table, str2op.size, "mov")]);

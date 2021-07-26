@@ -5,6 +5,15 @@
 #define FNV_OFFSET 14695981039346656037ULL
 #define FNV_PRIME 1099511628211ULL
 
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+
+/**
+ * @brief FNV-1a hash function
+ * 
+ * @param str string to be hashed
+ * 
+ * @return hash value
+ */
 static inline uint64_t fnv1a_hash(const char* str) {
     uint64_t hash = FNV_OFFSET;
     for(const char* p = str; *p; ++p) {
@@ -56,7 +65,7 @@ int lut_get(Pair* table, const size_t size, const char* key) {
 
 void lut_fill(Pair* table, const size_t size,
               const char* const r_table[], const size_t r_size) {
-    for (size_t i = 0; i < r_size; i++) {
+    for (size_t i = 0; i < MIN(r_size, size); i++) {
         lut_insert(table, size, r_table[i], i);
     }
 }
