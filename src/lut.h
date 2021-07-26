@@ -3,18 +3,22 @@
 
 #include <stdint.h>
 
-#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+#define CREATE_LUT(name, lut_size) struct {                \
+                                    Pair table[lut_size];   \
+                                    const size_t size;            \
+                                    } name = {.size = lut_size}
 
-#define CREATE_LUT(name, size) Pair name[size]
 
+#define LUT_MAX_KEY_SIZE 16
 typedef struct Pair {
-    char key[16];
+    char key[LUT_MAX_KEY_SIZE];
     int value; 
 } Pair;
 
-void insert_opcode(Pair* table, const size_t size, 
+void lut_insert(Pair* table, const size_t size, 
                    const char* key, const int value);
-
-int get_opcode(Pair* table, const size_t size, const char* key);
+int lut_get(Pair* table, const size_t size, const char* key);
+void lut_fill(Pair* table, const size_t size,
+              const char* const r_table[], const size_t r_size);
 
 #endif

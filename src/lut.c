@@ -14,14 +14,14 @@ static inline uint64_t fnv1a_hash(const char* str) {
     return hash;
 }
 
-void insert_opcode(Pair* table, const size_t size, 
+void lut_insert(Pair* table, const size_t size, 
                    const char* key, const int value) {                      
     uint64_t hash = fnv1a_hash(key);
     const size_t index =  (size_t)hash % size;
 
     for (size_t i = index; i < size; ++i) {
         if (!(*table[i].key)) {
-            strcpy_s(table[i].key, ARRAY_SIZE(table[i].key), key);
+            strcpy_s(table[i].key, LUT_MAX_KEY_SIZE, key);
             table[i].value = value;
             return;
         }
@@ -29,14 +29,14 @@ void insert_opcode(Pair* table, const size_t size,
 
     for (unsigned int i = 0; i < index; ++i) {
         if (!(*table[i].key)) {
-            strcpy_s(table[i].key, ARRAY_SIZE(table[i].key), key);
+            strcpy_s(table[i].key, LUT_MAX_KEY_SIZE, key);
             table[i].value = value;
             return;
         }
     }
 }
 
-int get_opcode(Pair* table, const size_t size, const char* key) {
+int lut_get(Pair* table, const size_t size, const char* key) {
     uint64_t hash = fnv1a_hash(key);
     const size_t index = (size_t)hash % size;
 
@@ -52,4 +52,11 @@ int get_opcode(Pair* table, const size_t size, const char* key) {
         }
     }
     return -1;
+}
+
+void lut_fill(Pair* table, const size_t size,
+              const char* const r_table[], const size_t r_size) {
+    for (size_t i = 0; i < r_size; i++) {
+        lut_insert(table, size, r_table[i], i);
+    }
 }

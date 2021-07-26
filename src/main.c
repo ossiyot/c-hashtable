@@ -17,11 +17,11 @@ const char* const op2str[] = {
 int main() {
     CREATE_LUT(str2op, 32);
 
-    insert_opcode(str2op, ARRAY_SIZE(str2op), "nop", NOP);
-    insert_opcode(str2op, ARRAY_SIZE(str2op), "mov", MOV);
+    lut_insert(str2op.table, str2op.size, "nop", NOP);
+    lut_insert(str2op.table, str2op.size, "mov", MOV);
 
-    printf("nop: %s\n", op2str[get_opcode(str2op, ARRAY_SIZE(str2op), "nop")]);
-    printf("mov: %s\n", op2str[get_opcode(str2op, ARRAY_SIZE(str2op), "mov")]);
+    printf("nop: %s\n", op2str[lut_get(str2op.table, str2op.size, "nop")]);
+    printf("mov: %s\n", op2str[lut_get(str2op.table, str2op.size, "mov")]);
 
     return EXIT_SUCCESS;
 }
