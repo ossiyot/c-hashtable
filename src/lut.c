@@ -1,6 +1,7 @@
 #include "lut.h"
 #include <string.h>
 #include <stdint.h>
+#include <limits.h>
 
 #define FNV_OFFSET 14695981039346656037ULL
 #define FNV_PRIME 1099511628211ULL
@@ -28,6 +29,7 @@ void lut_insert(Pair* table, const size_t size,
     uint64_t hash = fnv1a_hash(key);
     const size_t index =  (size_t)hash % size;
 
+    // Try positions from index -> end
     for (size_t i = index; i < size; ++i) {
         if (!(*table[i].key)) {
             strcpy_s(table[i].key, LUT_MAX_KEY_SIZE, key);
@@ -36,6 +38,7 @@ void lut_insert(Pair* table, const size_t size,
         }
     }
 
+    // Try positions 0 -> index
     for (unsigned int i = 0; i < index; ++i) {
         if (!(*table[i].key)) {
             strcpy_s(table[i].key, LUT_MAX_KEY_SIZE, key);
@@ -43,28 +46,32 @@ void lut_insert(Pair* table, const size_t size,
             return;
         }
     }
+    // If there isn't enough space do nothing
 }
 
 int lut_get(Pair* table, const size_t size, const char* key) {
     uint64_t hash = fnv1a_hash(key);
     const size_t index = (size_t)hash % size;
 
+    // Search positions from index -> end
     for (size_t i = index; i < size; ++i) {
         if (strcmp(table[i].key, key) == 0) {
             return table[i].value;
         }
     }
-
+    // Search positions 0 -> index
     for (unsigned int i = 0; i < index; ++i) {
         if (strcmp(table[i].key, key) == 0) {
             return table[i].value;
         }
     }
-    return -1;
+    // We didn't find key, return INT_MIN
+    return INT_MIN;
 }
 
 void lut_fill(Pair* table, const size_t size,
               const char* const r_table[], const size_t r_size) {
+    // Add all keys from r_table or until lookup table is full
     for (size_t i = 0; i < MIN(r_size, size); i++) {
         lut_insert(table, size, r_table[i], i);
     }
