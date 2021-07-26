@@ -7,9 +7,9 @@
 			"command": "C:\\Program Files\\mingw-w64\\x86_64-8.1.0-posix-seh-rt_v6-rev0\\mingw64\\bin\\gcc.exe",
 			"args": [
 				"-g",
-				"${file}",
+				"${workspaceFolder}\\src\\*.c",
 				"-o",
-				"${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe"
+				"${workspaceFolder}\\bin\\main.exe"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
