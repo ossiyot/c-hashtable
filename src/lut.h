@@ -6,9 +6,9 @@
 /**
  * Macro to create variable size lookup table at compile time 
  */
-#define CREATE_LUT(name, lut_size) struct {                \
-                                    Pair table[lut_size];   \
-                                    const size_t size;            \
+#define CREATE_LUT(name, lut_size) struct {                     \
+                                    Pair table[lut_size];       \
+                                    const size_t size;          \
                                     } name = {.size = lut_size}
 
 

@@ -51,7 +51,7 @@ void lut_insert(Pair* table, const size_t size,
 
 int lut_get(Pair* table, const size_t size, const char* key) {
     uint64_t hash = fnv1a_hash(key);
-    const size_t index = (size_t)hash % size;
+    const size_t index = ((size_t)hash) % size;
 
     // Search positions from index -> end
     for (size_t i = index; i < size; ++i) {
