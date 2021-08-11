@@ -29,8 +29,7 @@ typedef struct Pair {
  * @param key key to be inserted
  * @param value value to be inserted
  */
-void lut_insert(Pair* table, const size_t size, 
-                   const char* key, const int value);
+void lut_insert(Pair* table, size_t size, const char* key, int value);
 
 /**
  * @brief Get value of key from lookup table
@@ -41,7 +40,7 @@ void lut_insert(Pair* table, const size_t size,
  * 
  * @return value paired with given key
  */
-int lut_get(Pair* table, const size_t size, const char* key);
+int lut_get(Pair* table, size_t size, const char* key);
 
 /**
  * @brief Fill lookup table with reverse table (integers mapped to strings)
@@ -51,7 +50,7 @@ int lut_get(Pair* table, const size_t size, const char* key);
  * @param r_table array of strings
  * @param r_size size of \p r_table
  */
-void lut_fill(Pair* table, const size_t size,
-              const char* const r_table[], const size_t r_size);
+void lut_fill(Pair* table, size_t size,
+              const char* const r_table[], size_t r_size);
 
 #endif

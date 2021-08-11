@@ -24,9 +24,28 @@ static inline uint64_t fnv1a_hash(const char* str) {
     return hash;
 }
 
+/**
+ * @brief dfb2 hash function
+ * 
+ * @param str string to be hashed
+ * 
+ * @return hash value
+ */
+static inline uint64_t djb2(const unsigned char *str) {
+    uint64_t hash = 5381;
+    int c;
+
+    while (c = *str++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return hash;
+}
+
 void lut_insert(Pair* table, const size_t size, 
-                   const char* key, const int value) {                      
-    uint64_t hash = fnv1a_hash(key);
+                   const char* key, const int value) {  
+    //uint32_t hash;                    
+    //MurmurHash3(key, strlen(key), &hash);
+    uint64_t hash = djb2(key);
     const size_t index =  (size_t)hash % size;
 
     // Try positions from index -> end
@@ -50,7 +69,9 @@ void lut_insert(Pair* table, const size_t size,
 }
 
 int lut_get(Pair* table, const size_t size, const char* key) {
-    uint64_t hash = fnv1a_hash(key);
+    //uint32_t hash;                    
+    //MurmurHash3(key, strlen(key), &hash);
+    uint64_t hash = djb2(key);
     const size_t index = ((size_t)hash) % size;
 
     // Search positions from index -> end
