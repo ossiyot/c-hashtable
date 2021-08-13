@@ -43,8 +43,6 @@ static inline uint64_t djb2(const unsigned char *str) {
 
 void lut_insert(Pair* table, const size_t size, 
                    const char* key, const int value) {  
-    //uint32_t hash;                    
-    //MurmurHash3(key, strlen(key), &hash);
     uint64_t hash = djb2(key);
     const size_t index =  (size_t)hash % size;
 
@@ -69,8 +67,6 @@ void lut_insert(Pair* table, const size_t size,
 }
 
 int lut_get(Pair* table, const size_t size, const char* key) {
-    //uint32_t hash;                    
-    //MurmurHash3(key, strlen(key), &hash);
     uint64_t hash = djb2(key);
     const size_t index = ((size_t)hash) % size;
 
