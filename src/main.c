@@ -1,4 +1,3 @@
-
 #include "hashtable.h"
 #include <stdio.h>
 #include <stdlib.h>

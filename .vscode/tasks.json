@@ -3,11 +3,15 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "C/C++: gcc.exe build active file",
-			"command": "C:\\Program Files\\mingw-w64\\x86_64-8.1.0-posix-seh-rt_v6-rev0\\mingw64\\bin\\gcc.exe",
+			"label": "C/C++: clang build active file",
+			"command": "C:\\Program Files\\LLVM\\bin\\clang.exe",
 			"args": [
-				"-O3",
+				"-std=c17",
+				"-target",
+				"x86_64-pc-windows-gnu",
+				"-fuse-ld=lld",
 				//"-g",
+				"-O3",
 				"${workspaceFolder}\\src\\*.c",
 				"-o",
 				"${workspaceFolder}\\bin\\main.exe"
@@ -22,7 +26,7 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"detail": "compiler: \"C:\\Program Files\\mingw-w64\\x86_64-8.1.0-posix-seh-rt_v6-rev0\\mingw64\\bin\\gcc.exe\""
+			"detail": "compiler: \"C:\\Program Files\\LLVM\\bin\\clang.exe\""
 		}
 	]
 }
