@@ -54,13 +54,6 @@ char program_str[PROGRAM_SIZE][5];
 CREATE_LUT(str2op, 64);
 
 int main() {
-    struct abc {
-        int a;
-    } a = {.a = 0};
-    struct abc {
-        int a;
-    } b = {.a = 1};
-
     srand(time(NULL));
 
     lut_fill(str2op.table, str2op.size, op2str, ARRAY_SIZE(op2str));
