@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+/**
+ * @brief Hashtable struct
+ */
 typedef struct Hashtable {
     size_t size;
     uint64_t* keys;
@@ -11,28 +14,27 @@ typedef struct Hashtable {
 } Hashtable;
 
 /**
- * Macro to create variable size lookup table at compile time
+ * @brief Macro to create underlying struct for hashtable
+ *
+ * @param name variable name of the hashtable
+ * @param table_size size of the hashtable
  */
-#define CREATE_LUT(name, lut_size)                                             \
+#define CREATE_LUT(name, table_size)                                           \
     struct {                                                                   \
-        uint64_t keys[lut_size];                                               \
-        int values[lut_size];                                                  \
-        int taken[lut_size];                                                   \
+        uint64_t keys[table_size];                                             \
+        int values[table_size];                                                \
+        int taken[table_size];                                                 \
         const size_t size;                                                     \
-    } name##_s = {.size = lut_size};                                           \
-    Hashtable name = {.size = lut_size,                                        \
+    } name##_s = {.size = table_size};                                         \
+    Hashtable name = {.size = table_size,                                      \
                       .keys = name##_s.keys,                                   \
                       .values = name##_s.values,                               \
                       .taken = name##_s.taken}
 
-//
-#define LUT_MAX_KEY_SIZE 16
-
 /**
- * @brief Insert key-value pair into lookup table
+ * @brief Insert key-value pair into hashtable
  *
- * @param table table of the lookup table
- * @param size size of the lookup table
+ * @param table hashtable to be inserted into
  * @param key key to be inserted
  * @param value value to be inserted
  *
@@ -41,12 +43,11 @@ typedef struct Hashtable {
 int lut_insert(Hashtable* table, const char* key, int value);
 
 /**
- * @brief Get value of key from lookup table
+ * @brief Get associated value for key from hashtable
  *
- * @param table table of the lookup table
- * @param size size of the lookup table
+ * @param table hashtable to get value from
  * @param key key for lookup
- * @param out value from table
+ * @param out value from hashtable
  *
  * @return 0 if found, else -1
  */
@@ -55,8 +56,7 @@ int lut_get(Hashtable* table, const char* key, int* out);
 /**
  * @brief Fill lookup table with reverse table (integers mapped to strings)
  *
- * @param table table of the lookup table
- * @param size size of the lookup table
+ * @param table hashtable to fill
  * @param r_table array of strings
  * @param r_size size of \p r_table
  *

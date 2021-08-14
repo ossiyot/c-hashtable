@@ -1,7 +1,5 @@
 #include "lut.h"
-#include <limits.h>
 #include <stdint.h>
-#include <string.h>
 
 #define FNV_OFFSET 14695981039346656037ULL
 #define FNV_PRIME 1099511628211ULL
