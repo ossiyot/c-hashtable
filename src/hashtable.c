@@ -29,18 +29,18 @@ static inline uint64_t fnv1a_hash(const char* str) {
  *
  * @return hash value
  */
-static inline uint64_t djb2(const unsigned char* str) {
+static inline uint64_t djb2(const uint8_t* str) {
     uint64_t hash = 5381;
     int c;
 
-    while (c = *str++)
+    while ((c = *str++))
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
     return hash;
 }
 
 int lut_insert(Hashtable* table, const char* key, const int value) {
-    uint64_t hash = djb2(key);
+    uint64_t hash = djb2((const uint8_t*)key);
     const size_t index = (size_t)hash % table->size;
 
     // Try positions from index -> end
@@ -67,7 +67,7 @@ int lut_insert(Hashtable* table, const char* key, const int value) {
 }
 
 int lut_get(Hashtable* table, const char* key, int* out) {
-    uint64_t hash = djb2(key);
+    uint64_t hash = djb2((const uint8_t*)key);
     const size_t index = ((size_t)hash) % table->size;
 
     // Search positions from index -> end
