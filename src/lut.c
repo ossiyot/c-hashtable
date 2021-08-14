@@ -15,9 +15,9 @@
  *
  * @return hash value
  */
-static inline uint64_t fnv1a_hash(const char *str) {
+static inline uint64_t fnv1a_hash(const char* str) {
     uint64_t hash = FNV_OFFSET;
-    for (const char *p = str; *p; ++p) {
+    for (const char* p = str; *p; ++p) {
         hash ^= (uint64_t)(uint8_t)(*p);
         hash *= FNV_PRIME;
     }
@@ -31,7 +31,7 @@ static inline uint64_t fnv1a_hash(const char *str) {
  *
  * @return hash value
  */
-static inline uint64_t djb2(const unsigned char *str) {
+static inline uint64_t djb2(const unsigned char* str) {
     uint64_t hash = 5381;
     int c;
 
@@ -41,27 +41,26 @@ static inline uint64_t djb2(const unsigned char *str) {
     return hash;
 }
 
-int lut_insert(Pair *table, const size_t size, const char *key,
-                const int value) {
+int lut_insert(Hashtable* table, const char* key, const int value) {
     uint64_t hash = djb2(key);
-    const size_t index = (size_t)hash % size;
+    const size_t index = (size_t)hash % table->size;
 
     // Try positions from index -> end
-    for (size_t i = index; i < size; ++i) {
-        if (!table[i].taken) {
-            table[i].key = hash;
-            table[i].value = value;
-            table[i].taken = 1;
+    for (size_t i = index; i < table->size; ++i) {
+        if (!table->taken[i]) {
+            table->keys[i] = hash;
+            table->values[i] = value;
+            table->taken[i] = 1;
             return 0;
         }
     }
 
     // Try positions 0 -> index
     for (unsigned int i = 0; i < index; ++i) {
-        if (!table[i].taken) {
-            table[i].key = hash;
-            table[i].value = value;
-            table[i].taken = 1;
+        if (!table->taken[i]) {
+            table->keys[i] = hash;
+            table->values[i] = value;
+            table->taken[i] = 1;
             return 0;
         }
     }
@@ -69,21 +68,21 @@ int lut_insert(Pair *table, const size_t size, const char *key,
     return -1;
 }
 
-int lut_get(Pair *table, const size_t size, const char *key, int* out) {
+int lut_get(Hashtable* table, const char* key, int* out) {
     uint64_t hash = djb2(key);
-    const size_t index = ((size_t)hash) % size;
+    const size_t index = ((size_t)hash) % table->size;
 
     // Search positions from index -> end
-    for (size_t i = index; i < size; ++i) {
-        if (table[i].key == hash) {
-            *out = table[i].value;
+    for (size_t i = index; i < table->size; ++i) {
+        if (table->keys[i] == hash) {
+            *out = table->values[i];
             return 0;
         }
     }
     // Search positions 0 -> index
     for (unsigned int i = 0; i < index; ++i) {
-        if (table[i].key == hash) {
-            *out = table[i].value;
+        if (table->keys[i] == hash) {
+            *out = table->values[i];
             return 0;
         }
     }
@@ -91,11 +90,11 @@ int lut_get(Pair *table, const size_t size, const char *key, int* out) {
     return -1;
 }
 
-int lut_fill(Pair *table, const size_t size, const char *const r_table[],
-              const size_t r_size) {
+int lut_fill(Hashtable* table, const char* const r_table[],
+             const size_t r_size) {
     // Add all keys from r_table or until lookup table is full
-    for (size_t i = 0; i < MIN(r_size, size); i++) {
-        lut_insert(table, size, r_table[i], i);
+    for (size_t i = 0; i < MIN(r_size, table->size); i++) {
+        lut_insert(table, r_table[i], i);
     }
-    return r_size < size ? 0 : -1;
+    return r_size < table->size ? 0 : -1;
 }

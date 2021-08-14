@@ -40,7 +40,7 @@ typedef enum OPCODE {
 #undef X
 } OPCODE;
 
-const char *const op2str[] = {
+const char* const op2str[] = {
 #define X(name) [name] = #name,
     OPCODE_LIST
 #undef X
@@ -56,27 +56,27 @@ CREATE_LUT(str2op, 64);
 int main() {
     srand(time(NULL));
 
-    lut_fill(str2op.table, str2op.size, op2str, ARRAY_SIZE(op2str));
+    lut_fill(&str2op, op2str, ARRAY_SIZE(op2str));
 
     clock_t time_table;
     clock_t time_array;
 
     // Generate benchmark program
     for (int i = 0; i < PROGRAM_SIZE; ++i) {
-        const char *opcode = op2str[rand() % ARRAY_SIZE(op2str)];
+        const char* opcode = op2str[rand() % ARRAY_SIZE(op2str)];
         strcpy(program_str[i], opcode);
     }
 
     clock_t start = clock();
     for (int i = 0; i < PROGRAM_SIZE; i++) {
-        const char *opcode = program_str[i];
-        lut_get(str2op.table, str2op.size, opcode, (int*)&program_table[i]);
+        const char* opcode = program_str[i];
+        lut_get(&str2op, opcode, (int*)&program_table[i]);
     }
     time_table = clock() - start;
 
     start = clock();
     for (int i = 0; i < PROGRAM_SIZE; i++) {
-        const char *opcode = program_str[i];
+        const char* opcode = program_str[i];
         for (int j = 0; j < ARRAY_SIZE(op2str); j++) {
             if (strcmp(opcode, op2str[j]) == 0) {
                 program_array[i] = j;
