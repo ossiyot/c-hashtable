@@ -1,4 +1,4 @@
-#include "lut.h"
+#include "hashtable.h"
 #include <stdint.h>
 
 #define FNV_OFFSET 14695981039346656037ULL
@@ -88,9 +88,8 @@ int lut_get(Hashtable* table, const char* key, int* out) {
     return -1;
 }
 
-int lut_fill(Hashtable* table, const char* const r_table[],
-             const size_t r_size) {
-    // Add all keys from r_table or until lookup table is full
+int lut_fill(Hashtable* table, const char* const r_table[], size_t r_size) {
+    // Add all keys from r_table or until hashtable is full
     for (size_t i = 0; i < MIN(r_size, table->size); i++) {
         lut_insert(table, r_table[i], i);
     }

@@ -1,5 +1,5 @@
 
-#include "lut.h"
+#include "hashtable.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,7 +51,7 @@ OPCODE program_table[PROGRAM_SIZE];
 OPCODE program_array[PROGRAM_SIZE];
 char program_str[PROGRAM_SIZE][5];
 
-CREATE_LUT(str2op, 64);
+CREATE_HASHTABLE(str2op, 64);
 
 int main() {
     srand(time(NULL));

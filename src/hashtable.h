@@ -19,7 +19,7 @@ typedef struct Hashtable {
  * @param name variable name of the hashtable
  * @param table_size size of the hashtable
  */
-#define CREATE_LUT(name, table_size)                                           \
+#define CREATE_HASHTABLE(name, table_size)                                     \
     struct {                                                                   \
         uint64_t keys[table_size];                                             \
         int values[table_size];                                                \
