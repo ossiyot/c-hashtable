@@ -70,7 +70,7 @@ int main() {
     clock_t start = clock();
     for (int i = 0; i < PROGRAM_SIZE; i++) {
         const char *opcode = program_str[i];
-        program_table[i] = lut_get(str2op.table, str2op.size, opcode);
+        lut_get(str2op.table, str2op.size, opcode, (int*)&program_table[i]);
     }
     time_table = clock() - start;
 

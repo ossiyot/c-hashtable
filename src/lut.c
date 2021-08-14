@@ -41,55 +41,61 @@ static inline uint64_t djb2(const unsigned char *str) {
     return hash;
 }
 
-void lut_insert(Pair *table, const size_t size, const char *key,
+int lut_insert(Pair *table, const size_t size, const char *key,
                 const int value) {
     uint64_t hash = djb2(key);
     const size_t index = (size_t)hash % size;
 
     // Try positions from index -> end
     for (size_t i = index; i < size; ++i) {
-        if (!(*table[i].key)) {
-            strcpy_s(table[i].key, LUT_MAX_KEY_SIZE, key);
+        if (!table[i].taken) {
+            table[i].key = hash;
             table[i].value = value;
-            return;
+            table[i].taken = 1;
+            return 0;
         }
     }
 
     // Try positions 0 -> index
     for (unsigned int i = 0; i < index; ++i) {
-        if (!(*table[i].key)) {
-            strcpy_s(table[i].key, LUT_MAX_KEY_SIZE, key);
+        if (!table[i].taken) {
+            table[i].key = hash;
             table[i].value = value;
-            return;
+            table[i].taken = 1;
+            return 0;
         }
     }
-    // If there isn't enough space do nothing
+    // If there isn't enough space return -1
+    return -1;
 }
 
-int lut_get(Pair *table, const size_t size, const char *key) {
+int lut_get(Pair *table, const size_t size, const char *key, int* out) {
     uint64_t hash = djb2(key);
     const size_t index = ((size_t)hash) % size;
 
     // Search positions from index -> end
     for (size_t i = index; i < size; ++i) {
-        if (strcmp(table[i].key, key) == 0) {
-            return table[i].value;
+        if (table[i].key == hash) {
+            *out = table[i].value;
+            return 0;
         }
     }
     // Search positions 0 -> index
     for (unsigned int i = 0; i < index; ++i) {
-        if (strcmp(table[i].key, key) == 0) {
-            return table[i].value;
+        if (table[i].key == hash) {
+            *out = table[i].value;
+            return 0;
         }
     }
-    // We didn't find key, return INT_MIN
-    return INT_MIN;
+    // We didn't find key, return -1
+    return -1;
 }
 
-void lut_fill(Pair *table, const size_t size, const char *const r_table[],
+int lut_fill(Pair *table, const size_t size, const char *const r_table[],
               const size_t r_size) {
     // Add all keys from r_table or until lookup table is full
     for (size_t i = 0; i < MIN(r_size, size); i++) {
         lut_insert(table, size, r_table[i], i);
     }
+    return r_size < size ? 0 : -1;
 }

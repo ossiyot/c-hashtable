@@ -18,8 +18,9 @@
  * Pair struct to keep lookup table data
  */
 typedef struct Pair {
-    char key[LUT_MAX_KEY_SIZE];
+    uint64_t key;
     int value;
+    int taken;
 } Pair;
 
 /**
@@ -29,8 +30,10 @@ typedef struct Pair {
  * @param size size of the lookup table
  * @param key key to be inserted
  * @param value value to be inserted
+ * 
+ * @return 0 if succeeded, else -1
  */
-void lut_insert(Pair *table, size_t size, const char *key, int value);
+int lut_insert(Pair *table, size_t size, const char *key, int value);
 
 /**
  * @brief Get value of key from lookup table
@@ -38,10 +41,11 @@ void lut_insert(Pair *table, size_t size, const char *key, int value);
  * @param table table of the lookup table
  * @param size size of the lookup table
  * @param key key for lookup
+ * @param out value from table
  *
- * @return value paired with given key
+ * @return 0 if found, else -1
  */
-int lut_get(Pair *table, size_t size, const char *key);
+int lut_get(Pair *table, size_t size, const char *key, int* out);
 
 /**
  * @brief Fill lookup table with reverse table (integers mapped to strings)
@@ -50,8 +54,10 @@ int lut_get(Pair *table, size_t size, const char *key);
  * @param size size of the lookup table
  * @param r_table array of strings
  * @param r_size size of \p r_table
+ * 
+ * @return 0 if all elements got inserted, else -1
  */
-void lut_fill(Pair *table, size_t size, const char *const r_table[],
+int lut_fill(Pair *table, size_t size, const char *const r_table[],
               size_t r_size);
 
 #endif
