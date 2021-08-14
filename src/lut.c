@@ -1,7 +1,7 @@
 #include "lut.h"
-#include <string.h>
-#include <stdint.h>
 #include <limits.h>
+#include <stdint.h>
+#include <string.h>
 
 #define FNV_OFFSET 14695981039346656037ULL
 #define FNV_PRIME 1099511628211ULL
@@ -10,14 +10,14 @@
 
 /**
  * @brief FNV-1a hash function
- * 
+ *
  * @param str string to be hashed
- * 
+ *
  * @return hash value
  */
-static inline uint64_t fnv1a_hash(const char* str) {
+static inline uint64_t fnv1a_hash(const char *str) {
     uint64_t hash = FNV_OFFSET;
-    for(const char* p = str; *p; ++p) {
+    for (const char *p = str; *p; ++p) {
         hash ^= (uint64_t)(uint8_t)(*p);
         hash *= FNV_PRIME;
     }
@@ -26,9 +26,9 @@ static inline uint64_t fnv1a_hash(const char* str) {
 
 /**
  * @brief dfb2 hash function
- * 
+ *
  * @param str string to be hashed
- * 
+ *
  * @return hash value
  */
 static inline uint64_t djb2(const unsigned char *str) {
@@ -41,10 +41,10 @@ static inline uint64_t djb2(const unsigned char *str) {
     return hash;
 }
 
-void lut_insert(Pair* table, const size_t size, 
-                   const char* key, const int value) {  
+void lut_insert(Pair *table, const size_t size, const char *key,
+                const int value) {
     uint64_t hash = djb2(key);
-    const size_t index =  (size_t)hash % size;
+    const size_t index = (size_t)hash % size;
 
     // Try positions from index -> end
     for (size_t i = index; i < size; ++i) {
@@ -66,7 +66,7 @@ void lut_insert(Pair* table, const size_t size,
     // If there isn't enough space do nothing
 }
 
-int lut_get(Pair* table, const size_t size, const char* key) {
+int lut_get(Pair *table, const size_t size, const char *key) {
     uint64_t hash = djb2(key);
     const size_t index = ((size_t)hash) % size;
 
@@ -86,8 +86,8 @@ int lut_get(Pair* table, const size_t size, const char* key) {
     return INT_MIN;
 }
 
-void lut_fill(Pair* table, const size_t size,
-              const char* const r_table[], const size_t r_size) {
+void lut_fill(Pair *table, const size_t size, const char *const r_table[],
+              const size_t r_size) {
     // Add all keys from r_table or until lookup table is full
     for (size_t i = 0; i < MIN(r_size, size); i++) {
         lut_insert(table, size, r_table[i], i);
